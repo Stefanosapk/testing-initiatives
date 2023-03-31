@@ -6,21 +6,24 @@ on:
       - "main"
 
   pull_request:
-    types: [opened, synchronize]
+    types:
+      - closed
 
 jobs:
-  tagged-release:
-    name: "Tagged Release"
-    runs-on: "ubuntu-latest"
+  if_merged:
+  if: github.event.pull_request.merged
+    tagged-release:
+      name: "Tagged Release"
+      runs-on: "ubuntu-latest"
 
-    steps:
-      # ...
-      - name: "Build & test"
-        run: |
-          echo "${{ secrets.GITHUB_TOKEN }}"
+      steps:
+        # ...
+        - name: "Build & test"
+          run: |
+            echo "${{ secrets.GITHUB_TOKEN }}"
 
-      - uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "${{ github.event.pull_request.title }}"
-          prerelease: false
+        - uses: "marvinpinto/action-automatic-releases@latest"
+          with:
+            repo_token: "${{ secrets.GITHUB_TOKEN }}"
+            automatic_release_tag: "${{ github.event.pull_request.title }}"
+            prerelease: false
