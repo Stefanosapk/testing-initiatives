@@ -1,13 +1,10 @@
 name: "tagged-release"
 
 on:
-  push:
-    branches:
-      - "main"
-
   pull_request:
-    types:
-      - closed
+    branches:
+      - main
+    types: [closed]
 
 jobs:
   tagged-release:
