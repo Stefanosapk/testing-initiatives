@@ -15,7 +15,6 @@ jobs:
     tagged-release:
       name: "Tagged Release"
       runs-on: "ubuntu-latest"
-
       steps:
         # ...
         - name: "Build & test"
