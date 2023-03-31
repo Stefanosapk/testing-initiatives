@@ -12,11 +12,9 @@ jobs:
     name: "Tagged Release"
     runs-on: "ubuntu-latest"
     steps:
-      # ...
-      - name: "Build & test"
+      - name: "Create Release"
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}"
-
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
