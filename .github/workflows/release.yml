@@ -6,6 +6,20 @@ name: tagged-release
     types:
       - closed
 jobs:
+ tagged-release:
+    if: github.event.pull_request.merged
+    name: Tagged Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Release
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}"
+      - uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "${{ github.event.pull_request.title }}"
+          prerelease: false
+
   deploy:
     runs-on: ubuntu-latest
     steps:
@@ -32,16 +46,3 @@ jobs:
           branch: main
           commit_message: "docs: update CHANGELOG.md for ${{ github.ref_name }} [skip ci]"
           file_pattern: CHANGELOG.md
-  tagged-release:
-    if: github.event.pull_request.merged
-    name: Tagged Release
-    runs-on: ubuntu-latest
-    steps:
-      - name: Create Release
-        run: |
-          echo "${{ secrets.GITHUB_TOKEN }}"
-      - uses: marvinpinto/action-automatic-releases@latest
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "${{ github.event.pull_request.title }}"
-          prerelease: false
