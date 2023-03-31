@@ -20,6 +20,7 @@ jobs:
           automatic_release_tag: "${{ github.event.pull_request.title }}"
           prerelease: false
   deploy:
+    needs: tagged-release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
