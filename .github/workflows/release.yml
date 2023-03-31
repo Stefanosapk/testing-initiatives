@@ -6,7 +6,7 @@ name: tagged-release
     types:
       - closed
 jobs:
- tagged-release:
+  tagged-release:
     if: github.event.pull_request.merged
     name: Tagged Release
     runs-on: ubuntu-latest
@@ -19,7 +19,6 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "${{ github.event.pull_request.title }}"
           prerelease: false
-
   deploy:
     runs-on: ubuntu-latest
     steps:
