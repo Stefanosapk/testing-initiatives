@@ -6,13 +6,14 @@ on:
       - "main"
 
   pull_request:
-    types: [opened, synchronize]
+    types:
+      - closed
 
 jobs:
   tagged-release:
+    if: github.event.pull_request.merged
     name: "Tagged Release"
     runs-on: "ubuntu-latest"
-
     steps:
       # ...
       - name: "Build & test"
