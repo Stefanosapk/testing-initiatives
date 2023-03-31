@@ -13,8 +13,8 @@ jobs:
     runs-on: "ubuntu-latest"
     steps:
       - name: "Create Release"
-        # run: |
-        #   echo "${{ secrets.GITHUB_TOKEN }}"
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}"
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
