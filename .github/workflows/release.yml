@@ -11,7 +11,7 @@ on:
 
 jobs:
   if_merged:
-  if: github.event.pull_request.merged
+    if: github.event.pull_request.merged
     tagged-release:
       name: "Tagged Release"
       runs-on: "ubuntu-latest"
