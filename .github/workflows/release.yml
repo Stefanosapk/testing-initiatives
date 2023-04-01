@@ -4,7 +4,7 @@ name: tagged-release
   pull_request:
     branches:
       - main
-    types: [opened, synchronize]
+    types: [closed, synchronize]
 
 jobs:
   tagged-release:
