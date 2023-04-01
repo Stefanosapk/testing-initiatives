@@ -6,44 +6,78 @@ name: tagged-release
     types:
       - closed
 jobs:
-  tagged-release:
-    if: github.event.pull_request.merged
-    name: Tagged Release
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Create Release
-        run: |
-          echo "${{ secrets.GITHUB_TOKEN }}"
-      - uses: marvinpinto/action-automatic-releases@latest
+      - name: Checkout Code
+        uses: actions/checkout@v3
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          # automatic_release_tag: "${{ github.event.pull_request.title }}"
-          automatic_release_tag: "latest"
-          prerelease: false
-  # deploy:
-  #   needs: tagged-release
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout Code
-  #       uses: actions/checkout@v3
-  #     - name: Update CHANGELOG
-  #       id: changelog
-  #       uses: requarks/changelog-action@v1
-  #       with:
-  #         token: "${{ github.token }}"
-  #         tag: "${{ github.event.pull_request.title }}"
-  #     - name: Create Release
-  #       uses: ncipollo/release-action@v1.12.0
-  #       with:
-  #         allowUpdates: true
-  #         draft: false
-  #         makeLatest: true
-  #         name: "${{ github.ref_name }}"
-  #         body: "${{ steps.changelog.outputs.changes }}"
-  #         token: "${{ github.token }}"
-  #     - name: Commit CHANGELOG.md
-  #       uses: stefanzweifel/git-auto-commit-action@v4
-  #       with:
-  #         branch: main
-  #         commit_message: "docs: update CHANGELOG.md for ${{ github.ref_name }} [skip ci]"
-  #         file_pattern: CHANGELOG.md
+          fetch-depth: 0
+      - name: Get previous tag
+        id: previousTag
+        run: >
+          name=$(git --no-pager tag --sort=creatordate --merged ${{
+          github.ref_name }} | tail -2 | head -1)
+
+          echo "previousTag: $name"
+
+          echo "previousTag=$name" >> $GITHUB_ENV
+      - name: Update CHANGELOG
+        id: changelog
+        uses: requarks/changelog-action@v1
+        with:
+          token: "${{ github.token }}"
+          fromTag: "${{ github.event.pull_request.title }}"
+          toTag: "${{ env.previousTag }}"
+          writeToFile: false
+      - name: Create Release
+        uses: ncipollo/release-action@v1.12.0
+        with:
+          allowUpdates: true
+          draft: true
+          makeLatest: true
+          name: "${{ github.event.pull_request.title }}"
+          body: "${{ steps.changelog.outputs.changes }}"
+          token: "${{ secrets.GITHUB_TOKEN }}"
+# jobs:
+#   tagged-release:
+#     if: github.event.pull_request.merged
+#     name: Tagged Release
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Create Release
+#         run: |
+#           echo "${{ secrets.GITHUB_TOKEN }}"
+#       - uses: marvinpinto/action-automatic-releases@latest
+#         with:
+#           repo_token: "${{ secrets.GITHUB_TOKEN }}"
+#           automatic_release_tag: "${{ github.event.pull_request.title }}"
+#           prerelease: false
+
+# deploy:
+#   needs: tagged-release
+#   runs-on: ubuntu-latest
+#   steps:
+#     - name: Checkout Code
+#       uses: actions/checkout@v3
+#     - name: Update CHANGELOG
+#       id: changelog
+#       uses: requarks/changelog-action@v1
+#       with:
+#         token: "${{ github.token }}"
+#         tag: "${{ github.event.pull_request.title }}"
+#     - name: Create Release
+#       uses: ncipollo/release-action@v1.12.0
+#       with:
+#         allowUpdates: true
+#         draft: false
+#         makeLatest: true
+#         name: "${{ github.ref_name }}"
+#         body: "${{ steps.changelog.outputs.changes }}"
+#         token: "${{ github.token }}"
+#     - name: Commit CHANGELOG.md
+#       uses: stefanzweifel/git-auto-commit-action@v4
+#       with:
+#         branch: main
+#         commit_message: "docs: update CHANGELOG.md for ${{ github.ref_name }} [skip ci]"
+#         file_pattern: CHANGELOG.md
