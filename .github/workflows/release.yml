@@ -20,7 +20,7 @@ jobs:
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "${{ github.event.pull_request.title }}"
-          prerelease: true
+          prerelease: false
 # on:
 #   push:
 #     branches:
