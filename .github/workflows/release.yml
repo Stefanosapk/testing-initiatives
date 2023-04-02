@@ -16,7 +16,7 @@ jobs:
       - name: Create Release
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}"
-      - uses: marvinpinto/action-automatic-releases@${{ github.event.pull_request.title }}
+      - uses: marvinpinto/action-automatic-releases@"${{ github.event.pull_request.title }}"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "${{ github.event.pull_request.title }}"
